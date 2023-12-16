@@ -8,7 +8,7 @@ create table players(
     city varchar(255)  null,
     create_date datetime null,
     modify_date datetime null,
-    deleted boolean default false
+    deleted boolean default false not null
 );
 
 INSERT INTO players (name, surname, birth_date, footed, position, city)
