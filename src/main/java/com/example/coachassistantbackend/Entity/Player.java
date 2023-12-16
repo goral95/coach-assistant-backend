@@ -2,29 +2,31 @@ package com.example.coachassistantbackend.Entity;
 
 import java.time.LocalDateTime;
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "players")
+@SQLDelete(sql = "UPDATE players SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Player extends BaseAuditEntity{
     
     @Column(name = "name")
-    @NotBlank(message = "Name must be not null or empty")
+    @NotEmpty(message = "Name must be not null or empty")
     private String name;
 
     @Column(name = "surname")
-    @NotBlank(message = "Surname must be not null or empty")
+    @NotEmpty(message = "Surname must be not null or empty")
     private String surname;
 
     @Column(name = "birth_date")
-    @JsonFormat(pattern="YYYY-MM-dd")
-    @NotBlank(message = "Birthdate must be not null or empty")
+    @NotNull(message = "Birthdate must be not null or empty")
     private LocalDateTime birthDate;
 
     @Column(name = "footed")

@@ -3,13 +3,23 @@ package com.example.coachassistantbackend.Entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotNull;
 
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+@JsonIgnoreProperties(value = { "createdDate", "lastModifiedDate", "deleted"})
 public abstract class BaseAuditEntity implements Serializable {
     
     @Id
@@ -17,16 +27,17 @@ public abstract class BaseAuditEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @CreatedDate
+    @CreatedDate
     @Column(name = "create_date", updatable = false)
     private LocalDateTime createdDate;
 
-    // @LastModifiedDate
+    @LastModifiedDate
     @Column(name = "modify_date")
     private LocalDateTime lastModifiedDate;
 
     @Column(name = "deleted")
-    private Boolean deleted;
+    @NotNull
+    private Boolean deleted = false;
 
     public Long getId() {
         return id;
