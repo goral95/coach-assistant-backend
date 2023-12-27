@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.coachassistantbackend.Entity.Role;
 import com.example.coachassistantbackend.Entity.User;
+import com.example.coachassistantbackend.Exception.UserAlreadyExistsException;
+import com.example.coachassistantbackend.Exception.UserNotFoundException;
 import com.example.coachassistantbackend.Repository.UserRepository;
 import com.example.coachassistantbackend.Service.JwtService;
 
@@ -27,6 +29,9 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException("User with email " + request.getEmail() + " already exist");
+        }
         User user = new User();
         user.setName(request.getName());
         user.setSurname(request.getSurname());
@@ -41,9 +46,10 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
     }
