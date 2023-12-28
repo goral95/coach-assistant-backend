@@ -15,6 +15,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -37,6 +38,7 @@ public class User extends BaseAuditEntity implements UserDetails {
     private LocalDateTime birthDate;
 
     @Column(name = "email")
+    @Email(message = "Email is not valid")
     @NotNull(message = "Birthdate must be not null or empty")
     private String email;
 
@@ -50,6 +52,9 @@ public class User extends BaseAuditEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
+
+    @Column(name = "activated")
+    private Boolean activated = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -78,7 +83,7 @@ public class User extends BaseAuditEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return activated;
     }
 
     public String getName() {

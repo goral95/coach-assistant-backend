@@ -66,6 +66,22 @@ public class ExceptionHandlerController {
         return error;
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UserAlreadyConfirmedException.class)
+    public Map<String, String> userAlreadyExistException(UserAlreadyConfirmedException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return error;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(TokenExpiredException.class)
+    public Map<String, String> tokenExpiredException(TokenExpiredException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return error;
+    }
+
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AuthenticationException.class)
     public Map<String, String> wrongCredentials(AuthenticationException ex) {

@@ -8,18 +8,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.coachassistantbackend.Entity.User;
+import com.example.coachassistantbackend.Entity.ActivationToken;
 
 @Repository
 @Transactional(readOnly = true)
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface ActivationTokenRepository extends JpaRepository<ActivationToken, Long> {
 
-    Optional<User> findByEmail(String email);
+    Optional<ActivationToken> findByToken(String token);
 
     @Transactional
     @Modifying
-    @Query("UPDATE User u " +
-            "SET u.activated = TRUE WHERE u.email = ?1")
-    int enableUser(String email);
+    @Query("UPDATE ActivationToken t " +
+            "SET t.confirmed = true " +
+            "WHERE t.token = ?1")
+    int confirmToken(String token);
 
 }
