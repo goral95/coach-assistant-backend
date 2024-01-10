@@ -90,4 +90,15 @@ public class AuthenticationService {
         return new AuthenticationResponse(jwtToken, refreshToken);
     }
 
+    public AuthenticationResponse refreshToken(RefreshTokenRequest request) {
+        String userEmail = jwtService.extractUsername(request.getToken());
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        if (jwtService.isTokenValid(request.getToken(), user)) {
+            var jwtToken = jwtService.generateToken(user);
+            return new AuthenticationResponse(jwtToken, request.getToken());
+        }
+        return null;
+    }
+
 }

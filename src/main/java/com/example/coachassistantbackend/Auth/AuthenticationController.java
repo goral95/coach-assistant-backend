@@ -28,6 +28,11 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
+    @PostMapping("/refresh-token")
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.ok(authenticationService.refreshToken(request));
+    }
+
     @GetMapping("/confirm/{token}")
     public ResponseEntity<String> confirm(@PathVariable String token) {
         return ResponseEntity.ok(authenticationService.confirmToken(token));
