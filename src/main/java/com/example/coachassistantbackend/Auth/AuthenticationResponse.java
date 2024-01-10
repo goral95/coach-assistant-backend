@@ -1,19 +1,34 @@
 package com.example.coachassistantbackend.Auth;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AuthenticationResponse {
 
-    private String token;
+    @JsonProperty("access_token")
+    private String accessToken;
 
-    public AuthenticationResponse(String token) {
-        this.token = token;
+    @JsonProperty("refresh_token")
+    private String refreshToken;
+
+    public AuthenticationResponse(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 
-    public String getToken() {
-        return token;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
 }

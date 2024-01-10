@@ -39,7 +39,7 @@ public class AuthenticationService {
         this.activationTokenService = activationTokenService;
     }
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public RegisterResponse register(RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("User with email " + request.getEmail() + " already exist");
         }
@@ -59,7 +59,7 @@ public class AuthenticationService {
 
         // TODO send email
 
-        return new AuthenticationResponse(token);
+        return new RegisterResponse(token);
     }
 
     @Transactional
@@ -86,7 +86,8 @@ public class AuthenticationService {
         authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         var jwtToken = jwtService.generateToken(user);
-        return new AuthenticationResponse(jwtToken);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        return new AuthenticationResponse(jwtToken, refreshToken);
     }
 
 }
