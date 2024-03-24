@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -39,11 +40,11 @@ public class User extends BaseAuditEntity implements UserDetails {
 
     @Column(name = "email")
     @Email(message = "Email is not valid")
-    @NotNull(message = "Birthdate must be not null or empty")
+    @NotEmpty(message = "Email must be not null or empty")
     private String email;
 
     @Column(name = "password")
-    @NotNull(message = "Birthdate must be not null or empty")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
     @Column(name = "license")
