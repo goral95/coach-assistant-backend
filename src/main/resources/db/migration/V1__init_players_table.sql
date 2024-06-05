@@ -1,13 +1,13 @@
 create table players(
-    id int primary key auto_increment,
+    id bigserial not null primary key,
     name varchar(255)  not null,
     surname varchar(255)  not null,
-    birth_date datetime  not null,
+    birth_date timestamp  not null,
     footed varchar(255)  null,
     position varchar(255)  null,
     city varchar(255)  null,
-    create_date datetime null,
-    modify_date datetime null,
+    create_date timestamp null,
+    modify_date timestamp null,
     deleted boolean default false not null
 );
 

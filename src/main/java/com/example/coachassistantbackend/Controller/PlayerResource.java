@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,39 +20,41 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.coachassistantbackend.Entity.Player;
+import com.example.coachassistantbackend.Exception.ObjectIdentityException;
+import com.example.coachassistantbackend.Exception.ObjectNotFoundException;
 import com.example.coachassistantbackend.Service.PlayerService;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
 @Transactional
 public class PlayerResource {
-    
+
     private final Logger log = LoggerFactory.getLogger(PlayerResource.class);
 
     private final PlayerService playerService;
 
-    public PlayerResource(PlayerService playerService){
+    public PlayerResource(PlayerService playerService) {
         this.playerService = playerService;
     }
 
     @GetMapping("/players")
-    public ResponseEntity<List<Player>> getPlayers(){
+    public ResponseEntity<List<Player>> getPlayers() {
         log.debug("REST request to get all players");
         return ResponseEntity.ok().body(playerService.findAllPlayers());
     }
 
     @GetMapping("/players/{id}")
-    public ResponseEntity<Player> getPlayer(@PathVariable Long id){
+    public ResponseEntity<Player> getPlayer(@PathVariable Long id) {
         log.debug("REST request to get player with id: {}", id);
-        Optional<Player> result = playerService.findPlayer(id);
-        return result.isPresent() ? ResponseEntity.ok().body(result.get()) : ResponseEntity.notFound().build();
+        Player result = playerService.findPlayer(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Player not exist"));
+        return ResponseEntity.ok().body(result);
     }
 
     @PostMapping("/players")
-    public ResponseEntity<Player> createNewPlayer(@RequestBody @Valid Player player) throws URISyntaxException{
+    public ResponseEntity<Player> createNewPlayer(@RequestBody @Valid Player player) throws URISyntaxException {
         log.debug("REST request to save player: {}", player);
         Player result = playerService.save(player);
         return ResponseEntity
@@ -60,25 +63,27 @@ public class PlayerResource {
     }
 
     @PutMapping("/players/{id}")
-    public ResponseEntity<Player> updatePlayer(@PathVariable Long id, @RequestBody @Valid Player player){
+    public ResponseEntity<Player> updatePlayer(@PathVariable Long id, @RequestBody @Valid Player player) {
         log.debug("REST request to update player with id: {}", player.getId());
         if (player.getId() == null) {
-            return ResponseEntity.badRequest().build();
+            throw new ObjectIdentityException("Player id can't be null");
         }
         if (!Objects.equals(id, player.getId())) {
-            return ResponseEntity.badRequest().build();
+            throw new ObjectIdentityException("There is problem to identify player. Please check body and path id.");
         }
-
         if (!playerService.playerExist(id)) {
-            return ResponseEntity.notFound().build();
+            throw new ObjectNotFoundException("Player not exist");
         }
         Player result = playerService.save(player);
         return ResponseEntity.ok().body(result);
     }
 
     @DeleteMapping("/players/{id}")
-    public ResponseEntity<Void> deletePlayer(@PathVariable Long id){
+    public ResponseEntity<Void> deletePlayer(@PathVariable Long id) {
         log.debug("REST request to delete player with id: {}", id);
+        if (!playerService.playerExist(id)) {
+            throw new ObjectNotFoundException("Player not exist");
+        }
         playerService.delete(id);
         return ResponseEntity.noContent().build();
     }

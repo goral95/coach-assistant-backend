@@ -23,7 +23,6 @@ import jakarta.validation.constraints.NotNull;
 public abstract class BaseAuditEntity implements Serializable {
     
     @Id
-    @Column(name = "id", columnDefinition = "INTEGER")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
