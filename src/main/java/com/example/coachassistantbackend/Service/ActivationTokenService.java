@@ -2,32 +2,13 @@ package com.example.coachassistantbackend.Service;
 
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.example.coachassistantbackend.Entity.ActivationToken;
-import com.example.coachassistantbackend.Repository.ActivationTokenRepository;
 
-@Service
-public class ActivationTokenService {
+public interface ActivationTokenService {
 
-    private final ActivationTokenRepository activationTokenRepository;
+    ActivationToken save(ActivationToken activationToken);
 
-    public ActivationTokenService(ActivationTokenRepository activationTokenRepository) {
-        this.activationTokenRepository = activationTokenRepository;
-    }
+    Optional<ActivationToken> getToken(String token);
 
-    public ActivationToken save(ActivationToken activationToken) {
-        return activationTokenRepository.save(activationToken);
-    }
-
-    public Optional<ActivationToken> getToken(String token) {
-        return activationTokenRepository.findByToken(token);
-    }
-
-    @Transactional
-    public void confirmToken(String token) {
-        activationTokenRepository.confirmToken(token);
-    }
-
+    void confirmToken(String token);
 }
