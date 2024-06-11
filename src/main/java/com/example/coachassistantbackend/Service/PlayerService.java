@@ -3,38 +3,18 @@ package com.example.coachassistantbackend.Service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
-
 import com.example.coachassistantbackend.Entity.Player;
-import com.example.coachassistantbackend.Repository.PlayerRepository;
 
-@Service
-public class PlayerService {
+public interface PlayerService {
 
-    private final PlayerRepository playerRepository;
+    List<Player> findAllPlayers();
 
-    public PlayerService(PlayerRepository playerRepository){
-        this.playerRepository = playerRepository;
-    }
+    Optional<Player> findPlayer(Long id);
 
-    public List<Player> findAllPlayers(){
-        return playerRepository.findAll();
-    }
+    boolean playerExist(Long id);
 
-    public Optional<Player> findPlayer(Long id){
-        return playerRepository.findById(id);
-    }
+    Player save(Player player);
 
-    public boolean playerExist(Long id){
-        return playerRepository.existsById(id);
-    }
+    void delete(Long id);
 
-    public Player save(Player player){
-        return playerRepository.save(player);
-    }
-
-    public void delete(Long id){
-        playerRepository.deleteById(id);
-    }
-    
 }
