@@ -14,6 +14,9 @@ public class RegisterRequest {
     private LocalDateTime birthDate;
     private String license;
 
+    public RegisterRequest() {
+    }
+
     public RegisterRequest(String name, String surname, String email, String password, LocalDateTime birthDate,
             String license) {
         this.name = name;
