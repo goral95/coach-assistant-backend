@@ -1,14 +1,5 @@
 package com.example.coachassistantbackend.Auth;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.example.coachassistantbackend.Entity.ActivationToken;
 import com.example.coachassistantbackend.Entity.Role;
 import com.example.coachassistantbackend.Entity.User;
@@ -19,6 +10,14 @@ import com.example.coachassistantbackend.Exception.UserNotFoundException;
 import com.example.coachassistantbackend.Repository.UserRepository;
 import com.example.coachassistantbackend.Service.ActivationTokenService;
 import com.example.coachassistantbackend.Service.JwtService;
+import com.example.coachassistantbackend.Util.TokenGenerator;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 public class AuthenticationService {
@@ -28,14 +27,17 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final ActivationTokenService activationTokenService;
+    private final TokenGenerator tokenGenerator;
 
     public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService,
-            AuthenticationManager authenticationManager, ActivationTokenService activationTokenService) {
+                                 AuthenticationManager authenticationManager, ActivationTokenService activationTokenService,
+                                 TokenGenerator tokenGenerator) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.activationTokenService = activationTokenService;
+        this.tokenGenerator = tokenGenerator;
     }
 
     public RegisterResponse register(RegisterRequest request) {
@@ -52,7 +54,7 @@ public class AuthenticationService {
         user.setRole(Role.USER);
         User createdUser = userRepository.save(user);
 
-        String token = UUID.randomUUID().toString();
+        String token = tokenGenerator.generateToken();
         ActivationToken activationToken = new ActivationToken(token, createdUser);
         activationTokenService.save(activationToken);
 
