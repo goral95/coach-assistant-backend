@@ -80,6 +80,50 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.11</version>
+				<configuration>
+					<excludes>
+						<!-- DTO -->
+						<exclude>**/Entity/**</exclude>
+						<exclude>**/*Dto.class</exclude>
+						<exclude>**/*Request.class</exclude>
+						<exclude>**/*Response.class</exclude>
+
+						<!-- Exception -->
+						<exclude>**/Exception/**</exclude>
+						<exclude>**/*Exception.class</exclude>
+
+						<!-- Controller -->
+						<exclude>**/Controller/**</exclude>
+						<exclude>**/*Controller.class</exclude>
+
+						<!-- Config -->
+						<exclude>**/Config/**</exclude>
+
+						<!-- Utility -->
+						<exclude>**/Util/**</exclude>
+						<exclude>**/CoachAssistantBackendApplication.class</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
