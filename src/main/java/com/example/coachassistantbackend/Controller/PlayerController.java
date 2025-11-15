@@ -28,13 +28,13 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api")
 @Transactional
-public class PlayerResource {
+public class PlayerController {
 
-    private final Logger log = LoggerFactory.getLogger(PlayerResource.class);
+    private final Logger log = LoggerFactory.getLogger(PlayerController.class);
 
     private final PlayerService playerService;
 
-    public PlayerResource(PlayerService playerService) {
+    public PlayerController(PlayerService playerService) {
         this.playerService = playerService;
     }
 

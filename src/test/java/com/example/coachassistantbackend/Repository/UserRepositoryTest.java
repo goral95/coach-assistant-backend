@@ -1,32 +1,42 @@
 package com.example.coachassistantbackend.Repository;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
+import com.example.coachassistantbackend.Entity.Role;
+import com.example.coachassistantbackend.Entity.User;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import com.example.coachassistantbackend.Entity.Role;
-import com.example.coachassistantbackend.Entity.User;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @DataJpaTest
 public class UserRepositoryTest {
 
+    private static final String EMAIL = "lukas@gmail.com";
+    private static final String PASSWORD = "12345678";
+    private static final String NAME = "Łukasz";
+    private static final String SURNAME = "Górczyk";
+
     @Autowired
     private UserRepository userRepository;
+
+    private static final User user = new User();
+
+    @BeforeEach()
+    static void prepare() {
+        user.setEmail(EMAIL);
+        user.setPassword(PASSWORD);
+        user.setRole(Role.USER);
+        user.setName(NAME);
+        user.setSurname(SURNAME);
+        user.setBirthDate(LocalDateTime.now());
+    }
 
     @Test
     void testFindByEmailShouldReturnUserWithGivenEmail() {
         // given
-        User user = new User();
-        user.setEmail("lukas@gmail.com");
-        user.setPassword("12345678");
-        user.setRole(Role.USER);
-        user.setName("Łukasz");
-        user.setSurname("Górczyk");
-        user.setBirthDate(LocalDateTime.now());
         userRepository.save(user);
 
         // when
@@ -40,13 +50,6 @@ public class UserRepositoryTest {
     @Test
     void testFindByEmailShouldReturnEmptyOptional() {
         // given
-        User user = new User();
-        user.setEmail("lukas@gmail.com");
-        user.setPassword("12345678");
-        user.setRole(Role.USER);
-        user.setName("Łukasz");
-        user.setSurname("Górczyk");
-        user.setBirthDate(LocalDateTime.now());
         userRepository.save(user);
 
         // when
@@ -59,13 +62,6 @@ public class UserRepositoryTest {
     @Test
     void testEnableUserShouldChangeUserFiledActivatedToTrue() {
         // given
-        User user = new User();
-        user.setEmail("lukas@gmail.com");
-        user.setPassword("12345678");
-        user.setRole(Role.USER);
-        user.setName("Łukasz");
-        user.setSurname("Górczyk");
-        user.setBirthDate(LocalDateTime.now());
         userRepository.save(user);
 
         // when
